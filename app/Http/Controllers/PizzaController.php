@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PizzaResource;
 use App\Models\Pizza;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use Inertia\Inertia;
@@ -23,4 +24,18 @@ class PizzaController extends Controller
             'pizzas' => $convertedPizzaData,
         ]);
     }
+
+
+    public function buyPizza(Pizza $pizza){
+
+        return Inertia::render('Pizzas/Buy', [
+            'pizza' => $pizza,
+        ]);
+    }
+
+
+    public function buyPizzaByCash(Request $request){
+        dd($request);
+    }
+
 }
