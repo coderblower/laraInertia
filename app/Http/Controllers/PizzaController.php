@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\OrderRequest;
 use App\Http\Resources\PizzaResource;
 use App\Models\Pizza;
 use Illuminate\Support\Facades\Route;
@@ -34,8 +35,8 @@ class PizzaController extends Controller
     }
 
 
-    public function buyPizzaByCash(Request $request){
-        dd($request);
+    public function buyPizzaByCash(OrderRequest $request){
+        dd($request->all());
     }
 
 }
