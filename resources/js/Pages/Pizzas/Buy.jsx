@@ -59,7 +59,7 @@ const Buy = ({auth, laravelVersion, phpVersion, pizza}) => {
     const createOrder = (e) => {
         e.preventDefault();
         if(validateEmailOrMobile()){
-            post(route("buyPizzaByCash"), {
+            post(route("buyPizzaByCash"), { 
                 onSuccess: ()=>{},
             });
         }
@@ -79,7 +79,7 @@ const Buy = ({auth, laravelVersion, phpVersion, pizza}) => {
             <div className="grid lg:grid-cols-2 gap-6 mx-auto">
                 <div> <img src={pizza.image} alt="" /></div>
                 <div>
-                  <form method='POST' onSubmit={createOrder}>
+                  <form  onSubmit={createOrder}>
 
 
                        <div className=" flex flex-col gap-5">
@@ -300,8 +300,10 @@ const Buy = ({auth, laravelVersion, phpVersion, pizza}) => {
 
 
                         <div>
-                            <button>
-                                disabled = {processing}
+                            <button
+                             disabled = {processing}
+                            >
+                               
                                     Buy Pizza
                             </button>
                         </div>
