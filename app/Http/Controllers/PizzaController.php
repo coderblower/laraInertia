@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\OrderRequest;
 use App\Http\Resources\PizzaResource;
 use App\Models\Pizza;
+use App\Services\PaymentService;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
@@ -12,6 +13,10 @@ use Inertia\Inertia;
 
 class PizzaController extends Controller
 {
+
+    public function __construct(PaymentService $paymentService){
+        $this->paymentService = $paymentService;
+    }
     public function index()
     {
         $pizzas = Pizza::latest()->get();
@@ -36,7 +41,13 @@ class PizzaController extends Controller
 
 
     public function buyPizzaByCash(OrderRequest $request){
-        dd($request->all());
+        $pizzaInfo = Pizza::findOrFail($request->pizzaId);
+        if($pizzaInfo){
+            $this->paymentService->buyPizzaByCash($request, $pizzaInfo);
+        } 
+
+        
+
     }
 
 }
