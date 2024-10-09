@@ -15,7 +15,7 @@ class OrderFactory extends Factory
         return [
             'pizza_id' => Pizza::factory(), // Assuming a pizza factory exists
             'name' => $this->faker->name(),
-            'addresss' => $this->faker->address(),
+            'address' => $this->faker->address(),
             'mobile' => $this->faker->phoneNumber(),
             'email' => $this->faker->email(),
             'user_serial' => $this->faker->uuid(),

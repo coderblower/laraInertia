@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Application;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class PizzaController extends Controller
 {
@@ -41,12 +42,32 @@ class PizzaController extends Controller
 
 
     public function buyPizzaByCash(OrderRequest $request){
-        $pizzaInfo = Pizza::findOrFail($request->pizzaId);
-        if($pizzaInfo){
-            $this->paymentService->buyPizzaByCash($request, $pizzaInfo);
-        } 
 
-        
+        $pizzaInfo = Pizza::findOrFail($request->pizzaId);
+        $data = "There is some problem, Please try again";
+
+
+
+        if($pizzaInfo){
+
+            $data =  $this->paymentService->buyPizzaByCash($request, $pizzaInfo);
+
+            return redirect()->route('home')->with([
+                'success' => 'Your order created successfully',
+                'orderInfo' => $data
+            ]);
+
+        } else {
+            return redirect()->route('home')->with(['error'=>$data]);
+        }
+
+
+
+
+
+
+
+
 
     }
 

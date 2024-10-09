@@ -11,7 +11,7 @@ class Order extends Model
     protected $fillable = [
         'pizza_id',        // Foreign key to the pizzas table
         'name',            // Customer's name
-        'addresss',        // Customer's address (note the extra 's' at the end)
+        'address',        // Customer's address (note the extra 's' at the end)
         'mobile',          // Customer's mobile number
         'email',           // Customer's email
         'user_serial',     // User's serial number (if applicable)

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pizza_id');
             $table->string('name');
-            $table->string('addresss');
+            $table->string('address');
             $table->string('mobile')->nullable();
             $table->string('email')->nullable();
             $table->string('user_serial');
