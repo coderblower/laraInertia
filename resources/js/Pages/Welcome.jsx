@@ -8,29 +8,55 @@ import { useEffect, useState, } from 'react';
 export default function Welcome({ auth, laravelVersion, phpVersion, pizzas , toast}) {
 
 const {success, error, orderInfo } = usePage().props.toast;
-const [customerOrderInfo, setCustomerOrderInfo] = useState(orderInfo
-                                            && localStorage.setItem('orderInfo', JSON.stringify(orderInfo))
-                                            && orderInfo
-                                    || JSON.parse(localStorage.getItem('orderInfo'))||null)
+const [customerOrderInfo, setCustomerOrderInfo] = useState([]);
 
     useEffect(function(){
 
-        if(customerOrderInfo){
-            const timeoutId = setTimeout(()=>{
-                localStorage.removeItem('orderInfo')
-                setCustomerOrderInfo(null);
+        handleLocalstorage(orderInfo)
 
-            }, 10000);
 
-            return ()=>{
+        // if(customerOrderInfo){
+        //     const timeoutId = setTimeout(()=>{
+        //         localStorage.removeItem('orderInfo')
+        //         setCustomerOrderInfo(null);
+
+        //     }, 10000);
+
+        //     return ()=>{
+        //             // console.log('data', customerOrderInfo)
+        //         clearTimeout(timeoutId);
+        //     }
+        // }
+
+
+
+    }, [])
+
+
+    function handleLocalstorage(orderInfo){
+
+
+            if( orderInfo &&  !localStorage.getItem('orderInfo')){
+                    customerOrderInfo.push(orderInfo)
+
+                    setCustomerOrderInfo(customerOrderInfo);
                     console.log('data', customerOrderInfo)
-                clearTimeout(timeoutId);
+                    localStorage.setItem('orderInfo', JSON.stringify(customerOrderInfo))
+                    return;
             }
-        }
+
+            if( orderInfo ){
+                let temp = JSON.parse(localStorage.getItem('orderInfo'));
+                console.log(temp)
+                    temp.push(orderInfo);
+                    setCustomerOrderInfo(temp);
+                    console.log('data', customerOrderInfo, temp)
+                    localStorage.setItem('orderInfo', JSON.stringify(temp))
+            }
 
 
 
-    }, [customerOrderInfo])
+    }
 
     useEffect(function(){
         return ()=>{

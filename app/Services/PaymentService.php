@@ -27,7 +27,7 @@ class PaymentService{
 
         // return order and transictoin using array;
         return [
-            "orderInfo" => new OrderResource($order),
+            "orderInfo" => new OrderResource($order) ,
             "transaction" => new TransactionResource($transaction)
         ];
 

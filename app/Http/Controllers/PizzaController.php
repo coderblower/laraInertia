@@ -52,9 +52,12 @@ class PizzaController extends Controller
 
             $data =  $this->paymentService->buyPizzaByCash($request, $pizzaInfo);
 
+            // dd((array) $data);
+
             return redirect()->route('home')->with([
                 'success' => 'Your order created successfully',
-                'orderInfo' => $data
+                'orderInfo' =>   $data
+
             ]);
 
         } else {
