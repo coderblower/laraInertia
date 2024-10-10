@@ -1,12 +1,54 @@
 
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import GuestLayoutTwo from '@/Layouts/GuestLayoutTwo';
+import { useEffect, useState, } from 'react';
 
 
 
-export default function Welcome({ auth, laravelVersion, phpVersion, pizzas }) {
+export default function Welcome({ auth, laravelVersion, phpVersion, pizzas , toast}) {
 
-    console.log()
+const {success, error, orderInfo } = usePage().props.toast;
+const [customerOrderInfo, setCustomerOrderInfo] = useState(orderInfo
+                                            && localStorage.setItem('orderInfo', JSON.stringify(orderInfo))
+                                            && orderInfo
+                                    || JSON.parse(localStorage.getItem('orderInfo'))||null)
+
+    useEffect(function(){
+
+        if(customerOrderInfo){
+            const timeoutId = setTimeout(()=>{
+                localStorage.removeItem('orderInfo')
+                setCustomerOrderInfo(null);
+
+            }, 10000);
+
+            return ()=>{
+                    console.log('data', customerOrderInfo)
+                clearTimeout(timeoutId);
+            }
+        }
+
+
+
+    }, [customerOrderInfo])
+
+    useEffect(function(){
+        return ()=>{
+            console.log('hello world ')
+        }
+    }, []);
+
+
+
+
+    function removeFromLocal(){
+        setTimeout(function(){
+            localStorage.removeItem('orderInfo');
+            console.log('order remved from local successfully')
+        }, 60000)
+    }
+
+
     return (
 
         <>
