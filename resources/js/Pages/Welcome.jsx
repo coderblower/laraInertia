@@ -8,22 +8,38 @@ import { useEffect, useState, } from 'react';
 export default function Welcome({ auth, laravelVersion, phpVersion, pizzas , toast}) {
 
 const {success, error, orderInfo } = usePage().props.toast;
-const [customerOrderInfo, setCustomerOrderInfo] = useState([]);
+const localOrderInfo = localStorage.getItem('orderInfo');
+const [customerOrderInfo, setCustomerOrderInfo] = useState(localOrderInfo && 
+                                                            new Map(Object.entries(JSON.parse(localOrderInfo)))|| new Map);
 
     useEffect(function(){
+       
 
-        handleLocalstorage(orderInfo)
+        if( orderInfo  ) {
+            orderInfo['tilDate'] = (60*1000 ) +  new Date().getTime()
+            let {transaction:{data:{order_id}}} = orderInfo;
+            setCustomerOrderInfo(customerOrderInfo.set(order_id, orderInfo));
+        
+            localStorage.setItem('orderInfo', JSON.stringify(Object.fromEntries(customerOrderInfo)));
+
+        }
+
+        clear();
+                           
+    
+        
 
 
         // if(customerOrderInfo){
         //     const timeoutId = setTimeout(()=>{
         //         localStorage.removeItem('orderInfo')
-        //         setCustomerOrderInfo(null);
+        //         setCustomerOrderInfo(new Map);
+        //         console.log('fired ')
 
-        //     }, 10000);
+        //     }, 30*1000);
 
         //     return ()=>{
-        //             // console.log('data', customerOrderInfo)
+        //         console.log(' return called ', customerOrderInfo)
         //         clearTimeout(timeoutId);
         //     }
         // }
@@ -32,31 +48,29 @@ const [customerOrderInfo, setCustomerOrderInfo] = useState([]);
 
     }, [])
 
-
-    function handleLocalstorage(orderInfo){
-
-
-            if( orderInfo &&  !localStorage.getItem('orderInfo')){
-                    customerOrderInfo.push(orderInfo)
-
-                    setCustomerOrderInfo(customerOrderInfo);
-                    console.log('data', customerOrderInfo)
-                    localStorage.setItem('orderInfo', JSON.stringify(customerOrderInfo))
-                    return;
+    function clear(){
+        let keys = customerOrderInfo.keys();
+        while(true){
+            let result = keys.next();
+            if(result.done){
+                break;
             }
 
-            if( orderInfo ){
-                let temp = JSON.parse(localStorage.getItem('orderInfo'));
-                console.log(temp)
-                    temp.push(orderInfo);
-                    setCustomerOrderInfo(temp);
-                    console.log('data', customerOrderInfo, temp)
-                    localStorage.setItem('orderInfo', JSON.stringify(temp))
-            }
+            let data = customerOrderInfo.get(result.value);
+            let time = Math.max(data['tilDate'] - new Date().getTime(), 3000);
+            
+            setTimeout(function(){
+                customerOrderInfo.delete(result.value)
+                setCustomerOrderInfo(customerOrderInfo);
+                localStorage.setItem('orderInfo', JSON.stringify(Object.fromEntries(customerOrderInfo)));
+            }, time)
 
-
-
+            
+        }
     }
+
+
+    
 
     useEffect(function(){
         return ()=>{
@@ -66,13 +80,6 @@ const [customerOrderInfo, setCustomerOrderInfo] = useState([]);
 
 
 
-
-    function removeFromLocal(){
-        setTimeout(function(){
-            localStorage.removeItem('orderInfo');
-            console.log('order remved from local successfully')
-        }, 60000)
-    }
 
 
     return (
